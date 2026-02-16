@@ -12,3 +12,4 @@ Route::delete('/client/{id}', [ClientController::class, 'destroy'])->name('clien
 
 Route::get('/order/create', [OrderController::class, 'create'])->name('order.create');
 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
+

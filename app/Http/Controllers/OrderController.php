@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Order;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -43,7 +44,12 @@ class OrderController extends Controller
         ]);
 
         //inserción
-        Order::create($request->all());
+        //Si no tiene el campo "date" la pongo al momento actual
+        $order = new Order($request->all());
+        if (!$request->exists('date')) {
+            $order->date = Carbon::now();;
+        }
+        $order->save();
         return redirect()->route('index')->with('success', 'Order created');
 
     }
