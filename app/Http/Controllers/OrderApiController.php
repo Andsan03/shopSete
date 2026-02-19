@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Date;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class OrderApiController extends Controller
 {
@@ -17,13 +19,13 @@ class OrderApiController extends Controller
         $orders = Order::all();
         if ($orders != null) {
             return response()->json([
-                "message" => "ok",
+                "message" => "OK",
                 "data" => $orders
             ]);
         } else {
             return response()->json([
-                "message" => "ok",
-                "data" => $orders
+                "message" => "ERROR",
+                "data" => $orders   //es null
             ], JsonResponse::HTTP_NOT_FOUND);   //404
         }
     }
@@ -32,7 +34,7 @@ class OrderApiController extends Controller
     {
         //Si no tiene el campo "date" la pongo al momento actual
         $date = Carbon::now();
-        if ($request->exists('date')) {
+        if (!$request->exists('date')) {
             $date = $request->date;
         }
         try {
@@ -44,6 +46,35 @@ class OrderApiController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 "message" => "ERROR"/* . $e->getMessage()*/,
+                "data" => null
+            ], JsonResponse::HTTP_NOT_FOUND);
+        }
+    }
+
+
+    public function storeNoFillable(Request $request)
+    {
+        //Si no tiene el campo "date" la pongo al momento actual
+        $client = Client::find($request->client_id);
+        $product = Product::find($request->product_id);
+        $date = Carbon::now();
+        if (!$request->exists('date')) {
+            $date = $request->date;
+        }
+        try {
+            $order = new Order();
+            $order->date = $date;
+            $order->client_id = $client->id;
+            $order->product_id = $product->id;
+            Log::channel('stderr')->info("SOTRE NO FILLABLE: ", [$client, $product, $order]);
+            $order->save();
+            return response()->json([
+                "message" => "OK",
+                "data" => $order
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "message" => "ERROR" . $e->getMessage(),
                 "data" => null
             ], JsonResponse::HTTP_NOT_FOUND);
         }

@@ -47,6 +47,11 @@
                         <h5 class="card-title">{{ $client->name }} {{ $client->surname }}</h5>
                         @if($client->address)
                         <p class="card-text"> {{ $client->address }} </p>@endif
+                        <p class="card-text">
+                            @foreach ($client->orders as $o)
+                                {{ $o->date }} /// 
+                            @endforeach
+                        </p>
                         <form method="post" action="{{ route('client.destroy', $client->id) }}">
                             @csrf
                             @method('DELETE')

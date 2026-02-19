@@ -10,5 +10,6 @@ use Illuminate\Support\Facades\Route;
     DELETE /api/order/{id}: elimina de la bd esa order.
 */
 Route::get('/order', [OrderApiController::class, 'index']);
+//Route::post('/order', [OrderApiController::class, 'store']);
 Route::post('/order', [OrderApiController::class, 'store']);
 Route::delete('/order/{id}', [OrderApiController::class, 'destroy']);

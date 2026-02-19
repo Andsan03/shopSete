@@ -72,6 +72,6 @@ class ClientController extends Controller
         Order::where('client_id', $id)->delete();
 
         Client::destroy($id);
-        return redirect()->route('index')->with('success', 'Client deleted successfuly');
+        return redirect()->route('index')->with('deleted_client', 'Client deleted successfuly');
     }
 }

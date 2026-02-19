@@ -18,7 +18,7 @@ class OrderController extends Controller
     {
         $orders = Order::all();
         $clients = Client::all();
-        return view('index', compact('orders', 'clients'));
+        return view('index', compact('orders','clients'));
     }
 
     /**
@@ -50,7 +50,7 @@ class OrderController extends Controller
             $order->date = Carbon::now();;
         }
         $order->save();
-        return redirect()->route('index')->with('success', 'Order created');
+        return redirect()->route('index')->with('created_order', 'Order created');
 
     }
 
